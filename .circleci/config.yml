@@ -221,6 +221,7 @@ jobs:
               npm install
               npm run migrations 
               npm run migrations > migrations.txt
+              cat ~/project/backend/migrations.txt
         
         - run:
             name: Send migration results to KVBD 
