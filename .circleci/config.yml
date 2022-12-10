@@ -335,7 +335,7 @@ jobs:
             command: |
               sudo apt update
               sudo apt install -y python3 python3-pip
-              sudo apt install nodejs
+              sudo apt install -y nodejs
         - run:
             name: Update cloudfront distribution
             command: |
