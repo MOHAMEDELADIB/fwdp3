@@ -181,13 +181,9 @@ jobs:
     configure-infrastructure:
       docker:
       # Docker image here that supports Ansible
-        - image: python:3.7-alpine3.11
+        - image: cimg/node:13.8.0
       steps:
       - checkout
-      - run: 
-          name: Install aws
-          command: |
-            apk add --update aws-cli
       # Add ssh keys with fingerprint
       - add_ssh_keys:
           fingerprints: ["19:d7:6f:6d:07:a0:f8:4f:55:89:25:57:1b:75:f8:39"]
@@ -196,7 +192,9 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update ansible
+            sudo apt-get update
+            sudo apt-get install -y awscli
+            sudo apt-get install -y ansible
                 
       - run:
           name: Configure server
