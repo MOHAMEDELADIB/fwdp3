@@ -19,24 +19,18 @@ commands:
     description: Revert the last migration if successfully run in the current workflow.   
     steps:
       - run:
-          name: Revert migrations
-          command: |
-            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            
-           
-            SUCCESS=$(curl --insecure https://keyvalue.immanuel.co/api/KeyVal/GetValue/3cg7aby9/70v5fi8w/migration_${CIRCLE_WORKFLOW_ID:0:8})
-           
-           # not accessible
-           ## SUCCESS=$(curl -H "token: 9165e6d8-3cdf-45d3-9039-be52e27bfd76" --request GET https://api.memstash.io/values/${CIRCLE_WORKFLOW_ID:0:8})
-            if (( $SUCCESS==1 ))
-            then 
+        name: Revert migrations
+        command: |
+          SUCCESS=$(curl --insecure https://keyvalue.immanuel.co/api/KeyVal/GetValue/3cg7aby9/70v5fi8w/migration_${CIRCLE_WORKFLOW_ID:0:8})
+          if (( $SUCCESS==1 ));
+          then 
               npm cache clean 
               rm -rf node_modules
               cd ~/project/backend
               npm i
               npm run migrations:revert
             
-            fi
+          fi
             
 jobs:
   build-frontend:
