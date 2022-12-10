@@ -35,9 +35,9 @@ commands:
       - run :
           name: Revert migrations
           command: |
-            SUCCESS = 1
+            
             SUCCESS=$(curl --insecure https://keyvalue.immanuel.co/api/KeyVal/GetValue/3cg7aby9/70v5fi8w/migration_${CIRCLE_WORKFLOW_ID:0:7})
-            SUCCESS = 1
+            $SUCCESS = 1
             if (( $SUCCESS==1 ));
             then 
                 cd ~/project/backend
