@@ -142,7 +142,6 @@ jobs:
             name: install dependencies
             command: |
               sudo apt update
-              sudo apt install -y python3 python3-pip
               sudo apt install -y awscli
         - run:
             name: Ensure back-end infrastructure exists
@@ -189,8 +188,6 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            sudo apt-get update
-            sudo apt install -y python3 python3-pip
             sudo apt-get install -y awscli
             sudo apt install ansible
             
@@ -211,7 +208,6 @@ jobs:
         - run:
             name: Install dependencies
             command: |
-              sudo apt-get update
               sudo apt-get install -y awscli
         - run:
             name: Run migrations
@@ -246,8 +242,6 @@ jobs:
         - run:
             name: Install dependencies
             command: |
-              sudo apt update
-              sudo apt install nodejs   
               sudo apt install -y awscli  
         - run:
             name: Get backend url
@@ -279,8 +273,6 @@ jobs:
         - run:
             name: Install dependencies
             command: |
-              sudo apt update
-              sudo apt install -y python3 python3-pip
               sudo apt install -y awscli'
               sudo apt install ansible
         - run:
@@ -299,8 +291,6 @@ jobs:
         - run:
             name: Install dependencies
             command: |
-              sudo apt update
-              sudo apt install -y python3 python3-pip
               sudo apt install -y awscli
         - run:
             name: Get backend url
@@ -339,8 +329,6 @@ jobs:
         - run:
             name: Install dependencies
             command: |
-              sudo apt update
-              sudo apt install -y python3 python3-pip
               sudo apt install nodejs
         - run:
             name: Update cloudfront distribution
