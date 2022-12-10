@@ -5,6 +5,10 @@ commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     steps:
+      - run: 
+          name: Install aws
+          command: |
+            sudo apt install -y awscli
       - run:
           name: Destroy environments
           when: on_fail
@@ -138,15 +142,9 @@ jobs:
             npm audit fix --audit-level=critical
     deploy-infrastructure:
       docker:
-        - image: cimg/node:13.8.0
+        - image: amazon/aws-cli
       steps:
         - checkout
-        - run:
-            name: install dependencies
-            command: |
-                  sudo apt update
-                  sudo apt install -y awscli
-                  sudo apt install -y python3 python3-pip
         - run:
             name: Ensure back-end infrastructure exists
             command: |
@@ -194,6 +192,7 @@ jobs:
           name: Install dependencies
           command: |
                 apk add --update ansible
+                
       - run:
           name: Configure server
           command: |
@@ -243,7 +242,6 @@ jobs:
             command: |
               export BACKEND_IP=$(aws ec2 describe-instances --query "Reservations[*].Instances[*].PublicIpAddress" --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --output=text)
               export API_URL="http://${BACKEND_IP}:3030"
-              echo "${API_URL}"
               echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
         - run:
             name: Deploy frontend objects
@@ -294,7 +292,7 @@ jobs:
             command: |
               export BACKEND_IP=$(aws ec2 describe-instances --query "Reservations[*].Instances[*].PublicIpAddress" --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --output=text)
               export API_URL="http://${BACKEND_IP}:3030"
-              echo "${API_URL}"
+            
         - run:
             name: Backend smoke test.
             command: |
