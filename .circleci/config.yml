@@ -40,11 +40,9 @@ commands:
             SUCCESS = 1
             if (( $SUCCESS==1 ));
             then 
-              npm cache clean 
-              rm -rf node_modules
-              cd ~/project/backend
-              npm i
-              npm run migrations:revert
+                cd ~/project/backend
+                npm install
+                npm run migration:revert
             
             fi
             
@@ -252,7 +250,7 @@ jobs:
               export BACKEND_IP=$(aws ec2 describe-instances --query "Reservations[*].Instances[*].PublicIpAddress" --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --output=text)
               export API_URL="http://${BACKEND_IP}:3030"
               echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
-              echo "API_URL = ${API_URL}"
+              echo "${API_URL}"
               
         - run:
             name: Deploy frontend objects
@@ -318,7 +316,6 @@ jobs:
             name: Frontend smoke test.
             command: |
               export FRONTEND_URL="http://udapeople-${CIRCLE_WORKFLOW_ID}.s3-website-us-east-1.amazonaws.com/index.html"
-        
               echo $FRONTEND_URL
               if curl $FRONTEND_URL | grep "Welcome"
               then
