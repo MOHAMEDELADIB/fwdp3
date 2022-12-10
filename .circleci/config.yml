@@ -9,9 +9,9 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
-              aws cloudformation delete-stack --stack-name "fwdp3-backend-${CIRCLE_WORKFLOW_ID:0:8}"
-              aws cloudformation delete-stack --stack-name "fwdp3-frontend-${CIRCLE_WORKFLOW_ID:0:8}"
-              aws s3 rb --force "s3://fwdp3-${CIRCLE_WORKFLOW_ID:0:8}"
+              aws cloudformation delete-stack --stack-name "fwdp3-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+              aws cloudformation delete-stack --stack-name "fwdp3-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
+              aws s3 rb --force "s3://fwdp3-${CIRCLE_WORKFLOW_ID:0:7}"
   notify_failure:
     description: 'slack-failure'
     steps:
@@ -36,7 +36,7 @@ commands:
           name: Revert migrations
           command: |
             SUCCESS = 1
-            SUCCESS=$(curl --insecure https://keyvalue.immanuel.co/api/KeyVal/GetValue/3cg7aby9/70v5fi8w/migration_${CIRCLE_WORKFLOW_ID:0:8})
+            SUCCESS=$(curl --insecure https://keyvalue.immanuel.co/api/KeyVal/GetValue/3cg7aby9/70v5fi8w/migration_${CIRCLE_WORKFLOW_ID:0:7})
             SUCCESS = 1
             if (( $SUCCESS==1 ));
             then 
@@ -147,16 +147,16 @@ jobs:
               aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
               --tags project=fwdp3 \
-              --stack-name "fwdp3-backend-${CIRCLE_WORKFLOW_ID:0:8}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:8}"  
+              --stack-name "fwdp3-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
         - run:
             name: Ensure front-end infrastructure exist
             command: |
               aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
               --tags project=fwdp3 \
-              --stack-name "fwdp3-frontend-${CIRCLE_WORKFLOW_ID:0:8}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:8}" 
+              --stack-name "fwdp3-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" 
         - run:
             name: Add back-end ip to ansible inventory
             command: |
@@ -210,7 +210,7 @@ jobs:
               if grep -q "has been executed successfully." ~/project/backend/migrations.txt
               then
               echo "Migration Succesful"
-              curl https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/3cg7aby9/70v5fi8w/migration_${CIRCLE_WORKFLOW_ID:0:8}  -k -d '1'
+              curl https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/3cg7aby9/70v5fi8w/migration_${CIRCLE_WORKFLOW_ID:0:7}  -k -d '1'
               else
               echo "Migration failed"
               curl https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/3cg7aby9/70v5fi8w/migration_${CIRCLE_WORKFLOW_ID:0:}  -k -d '0'
@@ -235,7 +235,7 @@ jobs:
         - run:
             name: Get backend url
             command: |
-              export BACKEND_IP=$(aws ec2 describe-instances --query "Reservations[*].Instances[*].PublicIpAddress" --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:8}" --output=text)
+              export BACKEND_IP=$(aws ec2 describe-instances --query "Reservations[*].Instances[*].PublicIpAddress" --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --output=text)
               export API_URL="http://${BACKEND_IP}:3030"
               echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
         - run:
@@ -244,8 +244,8 @@ jobs:
               cd frontend
               npm install
               npm run build
-              tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:8}".tar.gz dist
-              aws s3 cp dist s3://fwdp3-${CIRCLE_WORKFLOW_ID:0:8} --recursive
+              tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
+              aws s3 cp dist s3://fwdp3-${CIRCLE_WORKFLOW_ID:0:7} --recursive
         - revert-migrations
         - destroy-environment     
     deploy-backend:
@@ -285,7 +285,7 @@ jobs:
         - run:
             name: Get backend url
             command: |
-              export BACKEND_IP=$(aws ec2 describe-instances --query "Reservations[*].Instances[*].PublicIpAddress" --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:8}" --output=text)
+              export BACKEND_IP=$(aws ec2 describe-instances --query "Reservations[*].Instances[*].PublicIpAddress" --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --output=text)
               export API_URL="http://${BACKEND_IP}:3030"
             
         - run:
@@ -332,7 +332,7 @@ jobs:
               aws cloudformation update-stack \
               --use-previous-template \
               --stack-name fwdstack \
-              --parameters ParameterKey=WorkflowID,ParameterValue=${CIRCLE_WORKFLOW_ID:0:8}
+              --parameters ParameterKey=WorkflowID,ParameterValue=${CIRCLE_WORKFLOW_ID:0:7}
         - run:
             name: install tar utilities
             command: |
