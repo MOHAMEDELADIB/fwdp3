@@ -1,5 +1,6 @@
 version: 2.1
-
+orbs:
+  slack: circleci/slack@4.12.0
 commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
@@ -11,6 +12,21 @@ commands:
               aws cloudformation delete-stack --stack-name "fwdp3-backend-${CIRCLE_WORKFLOW_ID:0:8}"
               aws cloudformation delete-stack --stack-name "fwdp3-frontend-${CIRCLE_WORKFLOW_ID:0:8}"
               aws s3 rb --force "s3://fwdp3-${CIRCLE_WORKFLOW_ID:0:8}"
+  notify_failure:
+    description: 'slack-failure'
+    steps:
+      - slack/notify:
+          event: fail
+          channel: $SLACK_DEFAULT_CHANNEL
+          template: basic_fail_1
+  notify_success:
+    description: 'slack-success'
+    steps:
+      - slack/notify:
+          event: pass
+          channel: $SLACK_DEFAULT_CHANNEL
+          template: success_tagged_deploy_1
+
               
 
   revert-migrations:
@@ -151,7 +167,10 @@ jobs:
             root: ~/
             paths:
               - project/.circleci/ansible/inventory.txt
-        - destroy-environment    
+        - notify_failure
+        - destroy-environment  
+        - notify_success 
+
     configure-infrastructure:
       docker:
       # Docker image here that supports Ansible
