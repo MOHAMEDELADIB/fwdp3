@@ -204,7 +204,7 @@ jobs:
       - destroy-environment
     run-migrations:
       docker:
-        - image: cimg/node:13.8.0
+        - image: cimg/node:19.1.0
       steps:
         - checkout
         - attach_workspace:
@@ -218,7 +218,6 @@ jobs:
             name: Run migrations
             command: |
               cd backend
-              npm cache clean --force
               npm install
               npm run migrations 
               npm run migrations > migrations.txt
