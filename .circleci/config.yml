@@ -138,9 +138,15 @@ jobs:
             npm audit fix --audit-level=critical
     deploy-infrastructure:
       docker:
-        - image: amazon/aws-cli
+        - image: cimg/node:13.8.0
       steps:
         - checkout
+        - run:
+            name: install dependencies
+            command: |
+                  sudo apt update
+                  sudo apt install -y awscli
+                  sudo apt install -y python3 python3-pip
         - run:
             name: Ensure back-end infrastructure exists
             command: |
