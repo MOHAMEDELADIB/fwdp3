@@ -5,17 +5,13 @@ commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     steps:
-      - run: 
-          name: Install aws
-          command: |
-            sudo apt install -y awscli
       - run:
           name: Destroy environments
           when: on_fail
           command: |
-              aws cloudformation delete-stack --stack-name "fwdp3-backend-${CIRCLE_WORKFLOW_ID:0:7}"
-              aws cloudformation delete-stack --stack-name "fwdp3-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
-              aws s3 rb --force "s3://fwdp3-${CIRCLE_WORKFLOW_ID:0:7}"
+              aws cloudformation delete-stack --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+              aws cloudformation delete-stack --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
+              aws s3 rb --force "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
   notify_failure:
     description: 'slack-failure'
     steps:
@@ -156,16 +152,16 @@ jobs:
             command: |
               aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
-              --tags project=fwdp3 \
-              --stack-name "fwdp3-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --tags project=udapeople \
+              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
         - run:
             name: Ensure front-end infrastructure exist
             command: |
               aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
-              --tags project=fwdp3 \
-              --stack-name "fwdp3-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --tags project=udapeople \
+              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" 
         - run:
             name: Add back-end ip to ansible inventory
@@ -188,7 +184,10 @@ jobs:
         - image: python:3.7-alpine3.11
       steps:
       - checkout
-
+      - run: 
+          name: Install aws
+          command: |
+            sudo apt install -y awscli
       # Add ssh keys with fingerprint
       - add_ssh_keys:
           fingerprints: ["19:d7:6f:6d:07:a0:f8:4f:55:89:25:57:1b:75:f8:39"]
@@ -258,7 +257,7 @@ jobs:
               npm install
               npm run build
               tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
-              aws s3 cp dist s3://fwdp3-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+              aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
         - revert-migrations
         - destroy-environment     
     deploy-backend:
@@ -301,8 +300,7 @@ jobs:
               export BACKEND_IP=$(aws ec2 describe-instances --query "Reservations[*].Instances[*].PublicIpAddress" --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --output=text)
               
               export API_URL="http://${BACKEND_IP}:3030"
-              echo "API_URL = ${API_URL}"
-             
+              echo "API_URL = ${API_URL}"  
         - run:
             name: Backend smoke test.
             command: |
