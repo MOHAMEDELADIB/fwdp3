@@ -64,7 +64,6 @@ jobs:
             paths: [frontend/node_modules]
             key: frontend-build
         - notify_success 
-
     build-backend:
       docker:
         -  image: circleci/node:13.8.0
