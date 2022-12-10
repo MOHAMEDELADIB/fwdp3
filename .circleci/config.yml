@@ -131,7 +131,7 @@ jobs:
       - run :
           name : backend-end-scan
           command: |
-            cd frontend
+            cd backend
             npm install
             npm audit fix --audit-level=critical
     deploy-infrastructure:
@@ -226,6 +226,7 @@ jobs:
         - run:
             name: Send migration results to KVBD 
             command: |
+              return 0
               if grep -q "has been executed successfully." ~/project/backend/migrations.txt
               then
               echo "Migration Succesful"

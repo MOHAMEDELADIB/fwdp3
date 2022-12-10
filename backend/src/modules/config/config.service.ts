@@ -97,12 +97,12 @@ export class ConfigService {
 
   get TypeOrmDatabase(): TypeOrmModuleOptions {
     return {
-      type: "postgres",
-      host: "postgres.chj8ppekwqp8.us-east-1.rds.amazonaws.com",
-      port: 5432,
-      username: "postgres",
-      password: "postgres",
-      database: "postgres",
+      type: this.envConfig.TYPEORM_CONNECTION,
+      host: this.envConfig.TYPEORM_HOST,
+      port: this.envConfig.TYPEORM_PORT,
+      username: this.envConfig.TYPEORM_USERNAME,
+      password: this.envConfig.TYPEORM_PASSWORD,
+      database: this.envConfig.TYPEORM_DATABASE,
       entities: [this.envConfig.TYPEORM_ENTITIES],
       // entities: [Product, Order, Employee],
       logging: this.envConfig.TYPEORM_LOGGING === 'true',
