@@ -225,7 +225,6 @@ jobs:
         - run:
             name: Send migration results to KVBD 
             command: |
-              return 0
               if grep -q "has been executed successfully." ~/project/backend/migrations.txt
               then
               echo "Migration Succesful"
