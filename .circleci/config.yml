@@ -324,33 +324,31 @@ jobs:
         - revert-migrations
         - destroy-environment
 
-cleanup:
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - checkout
-      - run:
-          name: Get old stack workflow id
-          command: |
-            npm install -y tar gzip
-      - attach_workspace:
-          at: ~/
-      - run:
-          name: Remove old stacks and files
-          command: |
-            export OldWorkflowID=$(cat ~/project/oldWorkflowId.txt)
-            export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
-            --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
-            if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
-            then
+    cleanup:
+      docker:
+        - image: amazon/aws-cli
+      steps:
+        - checkout
+        - run:
+            name: Get old stack workflow id
+            command: |
+              npm install -y tar gzip
+        - attach_workspace:
+            at: ~/
+        - run:
+            name: Remove old stacks and files
+            command: |
+              export OldWorkflowID=$(cat ~/project/oldWorkflowId.txt)
+              export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
+              --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
+              if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+              then
               aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
               aws s3 rb s3://udapeople-${OldWorkflowID} --force
               aws cloudformation delete-stack --stack-name "backend-${OldWorkflowID}"
               aws cloudformation delete-stack --stack-name "frontend-${OldWorkflowID}"
               echo "Stacks deleted succesfully"
-            fi
-            
-
+              fi
 workflows:
   default:
     jobs:
