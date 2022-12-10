@@ -192,9 +192,7 @@ jobs:
             sudo apt-get update
             sudo apt install -y python3 python3-pip
             sudo apt-get install -y awscli
-            sudo apt install ansible
-            
-                
+            sudo apt install -y  ansible
       - run:
           name: Configure server
           command: |
@@ -221,7 +219,6 @@ jobs:
               npm run migrations 
               npm run migrations > migrations.txt
               cat ~/project/backend/migrations.txt
-        
         - run:
             name: Send migration results to KVBD 
             command: |
@@ -242,7 +239,6 @@ jobs:
             keys: [frontend-build]
         - attach_workspace:
             at: ~/
-      
         - run:
             name: Install dependencies
             command: |
@@ -255,7 +251,6 @@ jobs:
               export API_URL="http://${BACKEND_IP}:3030"
               echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
               echo "${API_URL}"
-              
         - run:
             name: Deploy frontend objects
             command: |
@@ -281,7 +276,7 @@ jobs:
               sudo apt update
               sudo apt install -y python3 python3-pip
               sudo apt install -y awscli'
-              sudo apt install ansible
+              sudo apt install -y ansible
         - run:
             name: Deploy backend
             command: |
@@ -362,7 +357,6 @@ jobs:
             - project/oldWorkflowId.txt
         - revert-migrations
         - destroy-environment
-
     cleanup:
       docker:
         - image: amazon/aws-cli
