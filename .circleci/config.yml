@@ -207,8 +207,6 @@ jobs:
         - image: circleci/node:14.18.1
       steps:
         - checkout
-        - restore_cache:
-            keys: [backend-build]
         - attach_workspace:
             at: ~/
         - run:
@@ -220,6 +218,7 @@ jobs:
             name: Run migrations
             command: |
               cd backend
+              npm cache clean --force
               npm install
               npm run migrations 
               npm run migrations > migrations.txt
