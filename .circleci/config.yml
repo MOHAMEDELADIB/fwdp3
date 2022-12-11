@@ -180,7 +180,7 @@ jobs:
     configure-infrastructure:
       docker:
       # Docker image here that supports Ansible
-        - image: python:3.7-alpine3.11
+        - image: python:3.12.0a1-alpine
       steps:
       - checkout
       # Add ssh keys with fingerprint
@@ -191,7 +191,11 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update ansible 
+            apk add --update ansible apk add --update tar
+            apk add --update gzip
+            apk add --no-cache python3 py3-pip 
+            pip3 install --upgrade pip 
+            pip3 install awscli 
       - run:
           name: Configure server
           command: |
