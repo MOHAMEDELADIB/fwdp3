@@ -4,8 +4,6 @@ orbs:
 commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
-    docker:
-      - image: amazon/aws-cli
     steps:
       - run:
           name: Destroy environments
@@ -194,7 +192,7 @@ jobs:
           name: Install dependencies
           command: |
             apk add --update ansible 
-            apk add
+            apk add --no-cache aws-cli
       - run:
           name: Configure server
           command: |
