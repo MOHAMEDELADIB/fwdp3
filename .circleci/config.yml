@@ -194,6 +194,14 @@ jobs:
           command: |
             apk add --update ansible 
             apk add --update tar
+            apk add --no-cache \
+            python3 \
+            py3-pip \
+            && pip3 install --upgrade pip \
+            && pip3 install --no-cache-dir \
+            awscli \
+            && rm -rf /var/cache/apk/*
+
       - run:
           name: Configure server
           command: |
@@ -266,20 +274,24 @@ jobs:
         - destroy-environment     
     deploy-backend:
       docker:
-        - image: cimg/node:13.8.0
+        - image: python:3.12.0a1-alpine
       steps:
         - checkout
-        - restore_cache:
-            keys: [backend-build]
         - attach_workspace:
             at: ~/
         - run:
             name: Install dependencies
             command: |
-              sudo apt update
-              sudo apt install -y python3 python3-pip
-              sudo apt install -y awscli
-              sudo apt install -y ansible
+              apk update && apk add nodejs
+              apk add --update ansible 
+              apk add --update tar
+              apk add --no-cache \
+              python3 \
+              py3-pip \
+              && pip3 install --upgrade pip \
+              && pip3 install --no-cache-dir \
+              awscli \
+              && rm -rf /var/cache/apk/*
         - run:
             name: Deploy backend
             command: |
