@@ -27,9 +27,6 @@ commands:
           event: pass
           channel: $SLACK_DEFAULT_CHANNEL
           template: success_tagged_deploy_1
-
-              
-
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.   
     steps:
@@ -37,9 +34,16 @@ commands:
           when: on_fail
           name: Revert migrations
           command: |
-                cd ~/project/backend
-                npm install
-                npm run migration:revert 
+            SUCCESS=$(curl --insecure https://keyvalue.immanuel.co/api/KeyVal/GetValue/3cg7aby9/70v5fi8w/migration_${CIRCLE_WORKFLOW_ID:0:7})
+            if (( $SUCCESS==1 ));
+            then 
+              npm cache clean 
+              rm -rf node_modules
+              cd ~/project/backend
+              npm i
+              npm run migrations:revert
+            
+            fi
 jobs:
     build-frontend:
       docker:
@@ -327,6 +331,8 @@ jobs:
             name: Backend smoke test.
             command: |
               echo "API_URL = ${API_URL}" 
+              export BACKEND_IP=$(aws ec2 describe-instances --query "Reservations[*].Instances[*].PublicIpAddress" --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --output=text)
+              export API_URL="http://${BACKEND_IP}:3030"
               if curl "${API_URL}/api/status" | grep "ok"
               then
                 exit 0
