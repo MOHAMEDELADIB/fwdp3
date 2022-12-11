@@ -193,9 +193,13 @@ jobs:
           command: |
             apk add --update ansible apk add --update tar
             apk add --update gzip
-            apk add --no-cache python3 py3-pip 
-            pip3 install --upgrade pip 
-            pip3 install awscli 
+            apk add --no-cache \
+            python3 \
+            py3-pip \
+            && pip3 install --upgrade pip \
+            && pip3 install \
+            awscli \
+
       - run:
           name: Configure server
           command: |
