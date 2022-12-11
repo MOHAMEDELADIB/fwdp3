@@ -37,15 +37,9 @@ commands:
           when: on_fail
           name: Revert migrations
           command: |
-            SUCCESS = 1
-            if (( $SUCCESS==1 ));
-            then 
                 cd ~/project/backend
                 npm install
-                npm run migration:revert
-            
-            fi
-            
+                npm run migration:revert 
 jobs:
     build-frontend:
       docker:
@@ -332,6 +326,7 @@ jobs:
         - run:
             name: Backend smoke test.
             command: |
+              echo "API_URL = ${API_URL}" 
               if curl "${API_URL}/api/status" | grep "ok"
               then
                 exit 0
@@ -345,7 +340,8 @@ jobs:
               echo $FRONTEND_URL
               if curl $FRONTEND_URL | grep "Welcome"
               then
-              exit 0
+              echo "success"
+              exit 1
               else
               exit 1
               fi
