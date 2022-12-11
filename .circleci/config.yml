@@ -198,9 +198,10 @@ jobs:
       - run:
           name: Configure server
           command: |
+            cat ~/project/.circleci/ansible/inventory.txt
             ansible-playbook -i ~/project/.circleci/ansible/inventory.txt .circleci/ansible/configure-server.yml
       # Here's where you will add some code to rollback on failure 
-      #- destroy-environment
+      - destroy-environment
     run-migrations:
       docker:
         - image: cimg/node:19.1.0
