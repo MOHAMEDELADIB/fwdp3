@@ -11,7 +11,8 @@ commands:
           command: |
               aws cloudformation delete-stack --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
-              aws s3 rb --force "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
+              aws s3 rb s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --force 
+              aws s3 rm s3://udapeople-${OldWorkflowID} --recursive
   notify_failure:
     description: 'slack-failure'
     steps:
@@ -274,7 +275,6 @@ jobs:
             name: Install dependencies
             command: |
               sudo apt update
-              npm 
               sudo apt install -y python3 python3-pip
               sudo apt install -y awscli
               sudo apt install -y ansible
