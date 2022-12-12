@@ -400,6 +400,9 @@ jobs:
             name: Get old stack workflow id
             command: |
               npm install -y tar gzip
+              export OldWorkflowID=$(cat ~/project/oldWorkflowId.txt)
+              export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
+              --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
         - attach_workspace:
             at: ~/
         - run:
