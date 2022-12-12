@@ -47,7 +47,7 @@ commands:
 jobs:
     build-frontend:
       docker:
-        -  image: circleci/node:13.8.0
+        -  image: cimg/node:13.8.0
       steps:
         - checkout
         - restore_cache:
@@ -65,7 +65,7 @@ jobs:
 
     build-backend:
       docker:
-        -  image: circleci/node:13.8.0
+        -  image: cimg/node:13.8.0
       steps:
       - checkout
       - restore_cache:
@@ -81,7 +81,7 @@ jobs:
           key: backend-build
     test-frontend:
       docker:
-        -  image: circleci/node:13.8.0
+        -  image: cimg/node:13.8.0
       steps:
         - checkout
         - restore_cache:
@@ -363,7 +363,7 @@ jobs:
             command: |
               sudo apt update
               sudo apt install -y python3 python3-pip
-              sudo apt install -y nodejs
+              sudo apt install -y awscli
         - run:
             name: Update cloudfront distribution
             command: |
@@ -387,11 +387,11 @@ jobs:
         - destroy-environment
     cleanup:
       docker:
-        - image: amazon/aws-cli
+        - image: cimg/node:13.8.0
       steps:
         - checkout
         - run:
-            name: Get old stack workflow id
+            name: Fetch old stack workflow id
             command: |
               npm install -y tar gzip
         - attach_workspace:
@@ -402,6 +402,7 @@ jobs:
               export OldWorkflowID=$(cat ~/project/oldWorkflowId.txt)
               export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
               --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
+              cat 
               if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
               then
               aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
@@ -427,6 +428,9 @@ workflows:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
+          filters:
+            branches:
+              only: [master]
       - run-migrations:
           requires: [configure-infrastructure]
       - deploy-frontend:
