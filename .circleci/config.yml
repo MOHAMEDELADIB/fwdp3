@@ -411,6 +411,7 @@ jobs:
               aws cloudformation delete-stack --stack-name "frontend-${OldWorkflowID}"
               echo "Stacks deleted succesfully"
               fi
+
 workflows:
   default:
     jobs:
