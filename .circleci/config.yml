@@ -34,7 +34,8 @@ commands:
           when: on_fail
           name: Revert migrations
           command: |
-            SUCCESS=$(curl --insecure https://keyvalue.immanuel.co/api/KeyVal/GetValue/3cg7aby9/70v5fi8w/migration_${CIRCLE_WORKFLOW_ID:0:7})
+            SUCCESS=$(curl  https://keyvalue.immanuel.co/api/KeyVal/GetValue/ckbwbpyq/migration_${CIRCLE_WORKFLOW_ID:0:7} -k)
+            echo SUCCESS
             if (( $SUCCESS==1 ));
             then 
               npm cache clean 
@@ -232,8 +233,10 @@ jobs:
             command: |
               if grep -q "has been executed successfully." ~/project/backend/migrations.txt
               then
+              curl https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/ckbwbpyq/migration_${CIRCLE_WORKFLOW_ID:0:7}/1/  -k -d "1"
               echo "Migration Succesful"
               else
+              curl https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/ckbwbpyq/migration_${CIRCLE_WORKFLOW_ID:0:7}/0/  -k -d "0"
               echo "Migration failed"
               fi
         - revert-migrations
