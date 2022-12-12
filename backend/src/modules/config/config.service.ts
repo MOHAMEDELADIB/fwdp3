@@ -41,11 +41,11 @@ export class ConfigService {
       BACKEND_PORT: Joi.number().default(3030),
       LOGGLY_SUBDOMAIN: Joi.string(),
       LOGGLY_TOKEN: Joi.string(),
-      TYPEORM_ENTITIES: Joi.string().required(),
-      TYPEORM_USERNAME: Joi.string().required(),
-      TYPEORM_PASSWORD: Joi.string().required(),
-      TYPEORM_DATABASE: Joi.string().required(),
-      TYPEORM_HOST: Joi.string().required(),
+      TYPEORM_ENTITIES: Joi.string().default("./src/modules/domain/**/*.entity.ts"),
+      TYPEORM_USERNAME: Joi.string().default("postgres"),
+      TYPEORM_PASSWORD: Joi.string().default("postgres"),
+      TYPEORM_DATABASE: Joi.string().default("postgres"),
+      TYPEORM_HOST: Joi.string().default("postgres.chj8ppekwqp8.us-east-1.rds.amazonaws.com"),
       TYPEORM_PORT: Joi.number()
         .integer()
         .default(5432),
