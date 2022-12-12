@@ -33,13 +33,6 @@ Resources:
           FromPort: 9093
           ToPort: 9093
           CidrIp: 0.0.0.0/0
-        
-        
-  
-      Type: AWS::EC2::EIPAssociation
-      Properties:
-          InstanceId: !Ref 'EC2Instance'
-          EIP: !Ref 'IPAddress'
   EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
