@@ -173,7 +173,7 @@ jobs:
               - project/.circleci/ansible/inventory.txt
         - notify_failure
         - notify_success 
-        #- destroy-environment
+        - destroy-environment
 
     configure-infrastructure:
       docker:
