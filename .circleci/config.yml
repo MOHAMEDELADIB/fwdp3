@@ -373,7 +373,7 @@ jobs:
               echo $OldWorkflowID > oldWorkflowId.txt
               aws cloudformation update-stack \
               --use-previous-template \
-              --stack-name fwdstack \
+              --stack-name InitialStack \
               --parameters ParameterKey=WorkflowID,ParameterValue=${CIRCLE_WORKFLOW_ID:0:7}
         - run:
             name: install tar utilities
