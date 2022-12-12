@@ -1,2 +1,11 @@
-1. https://github.com/MOHAMEDELADIB/fwdp3
-2.
+1. github
+https://github.com/MOHAMEDELADIB/fwdp3
+2. backend url
+http://54.165.101.4:3030/api/status
+3. S3 bucket url blue
+http://udapeople-ak1j287dhjppmz437.s3-website-us-east-1.amazonaws.com/
+4. cdn & s3 for freen
+http://udapeople-40a4838.s3-website-us-east-1.amazonaws.com
+d2e1c903klyy6x.cloudfront.net
+5.prometheus
+http://3.216.201.134:9090
