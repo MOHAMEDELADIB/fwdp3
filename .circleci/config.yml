@@ -406,6 +406,9 @@ workflows:
               only: [master]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
+          filters:
+            branches:
+              only: [master]
       - run-migrations:
           requires: [configure-infrastructure]
       - deploy-frontend:
