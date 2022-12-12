@@ -330,7 +330,7 @@ jobs:
         - destroy-environment     
     cloudfront-update:
       docker:
-      - image: amazon/aws-cli
+      - image: cimg/node:13.8.0
       steps:
         - checkout
         - run:
@@ -338,7 +338,7 @@ jobs:
             command: |
               sudo apt update
               sudo apt install -y python3 python3-pip
-              sudo apt install nodejs
+              sudo apt install -y awscli
         - run:
             name: Update cloudfront distribution
             command: |
@@ -406,9 +406,6 @@ workflows:
               only: [master]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
-          filters:
-            branches:
-              only: [master]
       - run-migrations:
           requires: [configure-infrastructure]
       - deploy-frontend:
