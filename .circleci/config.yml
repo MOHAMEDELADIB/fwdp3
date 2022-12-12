@@ -173,7 +173,7 @@ jobs:
               - project/.circleci/ansible/inventory.txt
         - notify_failure
         - notify_success 
-        #- destroy-environment
+        - destroy-environment
 
     configure-infrastructure:
       docker:
@@ -428,9 +428,6 @@ workflows:
           requires: [build-frontend]
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-          filters:
-              branches:
-                only: [master]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
