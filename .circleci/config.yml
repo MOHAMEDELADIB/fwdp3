@@ -410,6 +410,7 @@ jobs:
             at: ~/
         - run:
             name: Remove old stacks and files
+            
             command: |
               export OldWorkflowID=$(cat ~/project/oldWorkflowId.txt)
               export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
@@ -435,6 +436,7 @@ workflows:
           requires: [build-backend]
       - scan-frontend:
           requires: [build-frontend]
+
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
