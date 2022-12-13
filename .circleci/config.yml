@@ -355,7 +355,7 @@ jobs:
               exit 1
               fi
         - revert-migrations
-        #- destroy-environment     
+        - destroy-environment     
     cloudfront-update:
       docker:
       - image: cimg/node:13.8.0
