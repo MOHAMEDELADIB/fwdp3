@@ -37,8 +37,8 @@ commands:
             SUCCESS=$(curl  https://keyvalue.immanuel.co/api/KeyVal/GetValue/ckbwbpyq/migration_${CIRCLE_WORKFLOW_ID:0:7} -k)
             echo $SUCCESS
             echo "https://keyvalue.immanuel.co/api/KeyVal/GetValue/ckbwbpyq/migration_${CIRCLE_WORKFLOW_ID:0:7} -k"
-            value=success
-            if [ $SUCCESS == $value ]
+            value=fail
+            if [ $SUCCESS != $value ]
             then 
               npm cache clean 
               rm -rf node_modules
@@ -238,7 +238,7 @@ jobs:
               echo "https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/ckbwbpyq/migration_${CIRCLE_WORKFLOW_ID:0:7}/success/  -k -d "1""
               else
               echo "https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/ckbwbpyq/migration_${CIRCLE_WORKFLOW_ID:0:7}/fail/  -k -d "0""
-              curl https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/ckbwbpyq/migration_${CIRCLE_WORKFLOW_ID:0:7}/success/  -k -d "0"
+              curl https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/ckbwbpyq/migration_${CIRCLE_WORKFLOW_ID:0:7}/fail/  -k -d "0"
               echo "Migration failed"
               fi
         - revert-migrations
