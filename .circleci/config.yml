@@ -40,8 +40,6 @@ commands:
             value=fail
             if [ $SUCCESS != $value ]
             then 
-              npm cache clean 
-              rm -rf node_modules
               cd ~/project/backend
               npm i
               npm run migrations:revert
