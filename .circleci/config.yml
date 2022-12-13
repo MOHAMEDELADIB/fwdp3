@@ -350,7 +350,7 @@ jobs:
               if curl $FRONTEND_URL | grep "Welcome"
               then
               echo "success"
-              exit 1
+              exit 0
               else
               exit 1
               fi
@@ -410,7 +410,6 @@ jobs:
             at: ~/
         - run:
             name: Remove old stacks and files
-            
             command: |
               export OldWorkflowID=$(cat ~/project/oldWorkflowId.txt)
               export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
@@ -436,12 +435,8 @@ workflows:
           requires: [build-backend]
       - scan-frontend:
           requires: [build-frontend]
-
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-          filters:
-            branches:
-              only: [master]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
