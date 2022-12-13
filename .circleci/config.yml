@@ -37,7 +37,8 @@ commands:
             SUCCESS=$(curl  https://keyvalue.immanuel.co/api/KeyVal/GetValue/ckbwbpyq/migration_${CIRCLE_WORKFLOW_ID:0:7} -k)
             echo $SUCCESS
             echo "https://keyvalue.immanuel.co/api/KeyVal/GetValue/ckbwbpyq/migration_${CIRCLE_WORKFLOW_ID:0:7} -k"
-            if (( $SUCCESS == "success" ))
+            value=success
+            if [ $SUCCESS == $value ]
             then 
               npm cache clean 
               rm -rf node_modules
