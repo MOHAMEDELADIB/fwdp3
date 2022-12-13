@@ -226,7 +226,6 @@ jobs:
             command: |
               cd backend
               npm install
-              npm run migrations 
               npm run migrations > migrations.txt
               cat ~/project/backend/migrations.txt
         - run:
@@ -237,7 +236,8 @@ jobs:
               curl https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/ckbwbpyq/migration_${CIRCLE_WORKFLOW_ID:0:7}/success/  -k -d "1"
               echo "https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/ckbwbpyq/migration_${CIRCLE_WORKFLOW_ID:0:7}/success/  -k -d "1""
               else
-              curl https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/ckbwbpyq/migration_${CIRCLE_WORKFLOW_ID:0:7}/fail/  -k -d "0"
+              echo "https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/ckbwbpyq/migration_${CIRCLE_WORKFLOW_ID:0:7}/fail/  -k -d "0""
+              curl https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/ckbwbpyq/migration_${CIRCLE_WORKFLOW_ID:0:7}/success/  -k -d "0"
               echo "Migration failed"
               fi
         - revert-migrations
